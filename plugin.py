@@ -26,8 +26,11 @@ class JiraStudioObserver(callbacks.Plugin):
         self.__parent.__init__(irc)
         self.bambooChannel = '#edison'
         self.bambooTime = 30
-        self.activityFeed = ActivityFeed(url='URLGOESHERE')
-        self.dependencyFeed = ActivityFeed(url='URLGOESHERE')
+        streams = self.registryValue('streams')
+        self.activityFeeds = []
+        for stream in streams:
+            self.activityFeeds.append(ActivityFeed(url=stream, username=self.registryValue('username'), self.registryValue('password')))
+
         try:
             schedule.removeEvent('myJiraStudioObserverEvent')
         except KeyError:
@@ -94,23 +97,15 @@ class JiraStudioObserver(callbacks.Plugin):
 
     def getFeedUpdates(self, irc):
         updated = False
-        self.activityFeed.update_feed()
-        self.dependencyFeed.update_feed()
-        while 1 == 1:
-            item = self.activityFeed.find_next_item()
-            if item is None:
-                break
-            else:
-                updated = True
-                irc.queueMsg(ircmsgs.privmsg(self.bambooChannel, item.get_summary()))
-
-        while 1==1:
-            item = self.dependencyFeed.find_next_item()
-            if item is None:
-                break
-            else:
-                updated = True
-                irc.queueMsg(ircmsgs.privmsg(self.bambooChannel, item.get_summary()))
+        for feed in self.activityFeeds:
+            feed.update_feed()
+            while 1 == 1:
+                item = feed.find_next_item()
+                if item is None:
+                    break
+                else:
+                    updated = True
+                    irc.queueMsg(ircmsgs.privmsg(self.bambooChannel, item.get_summary()))
 
         return updated
 
@@ -124,7 +119,7 @@ class JiraStudioObserver(callbacks.Plugin):
     latestbuild = wrap(latestbuild)
 
     def getLatest(self, irc, force=False):
-        bb = BambooFeed()
+        bb = BambooFeed(self.registryValue('bambooapiurl'), self.registryValue('username'), self.registryValue('password'))
         latest = bb.latest
         if force or self.lastBuild != latest["results"]["result"][0]["key"]:
             irc.queueMsg(ircmsgs.privmsg(self.bambooChannel, "Latest build reported as: " +

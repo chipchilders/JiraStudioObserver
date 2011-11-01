@@ -37,13 +37,14 @@ def configure(advanced):
     # user or not.  You should effect your configuration by manipulating the
     # registry as appropriate.
     from supybot.questions import expect, anything, something, yn
-    conf.registerPlugin('JiraStudioObserver', True)
+    JiraStudioObserver = conf.registerPlugin('JiraStudioObserver', True)
+
+class StreamURLs(registry.SpaceSeparatedListOfStrings):
+    List = callbacks.CanonicalNameSet
 
 
 JiraStudioObserver = conf.registerPlugin('JiraStudioObserver')
-# This is where your configuration variables (if any) should go.  For example:
-# conf.registerGlobalValue(JiraStudioObserver, 'someConfigVariableName',
-#     registry.Boolean(False, """Help for someConfigVariableName."""))
-
-
-# vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
+conf.registerGlobalValue(JiraStudioObserver, 'streams',StreamURLs([],"""Determines what streams should be tracked."""))
+conf.registerGlobalValue(JiraStudioObserver, 'bambooapiurl', registry.String('', """The URL of a target bamboo server."""))
+conf.registerGlobalValue(JiraStudioObserver, 'username', registry.String('', """The username to use when connecting to jira studio."""))
+conf.registerGlobalValue(JiraStudioObserver, 'password', registry.String('', """The password to use when connecting to jira studio."""))
