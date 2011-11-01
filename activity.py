@@ -5,14 +5,15 @@
 #
 ###
 import feedparser
+import urllib
 
 class ActivityFeed():
     """A class to manipulate Jira Studio activity feeds"""
-    def __init__(self, last_known_update = None, url = None):
+    def __init__(self, url, username, password, last_known_update = None):
         if url is None:
             raise "You must provide a Jira Studio feed URL"
-
-        self.url = url
+        split_url = url.split("://")
+        self.url = split_url[0] + "://" + urllib.quote(username) + ":" + urllib.quote(password) + "@" + split_url[1]
         self.feed = feedparser.parse(self.url)
         if last_known_update is None:
             self.last_updated = self.feed.entries[5]['updated_parsed']

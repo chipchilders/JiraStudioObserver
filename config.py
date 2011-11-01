@@ -44,6 +44,7 @@ class StreamURLs(registry.SpaceSeparatedListOfStrings):
 
 
 JiraStudioObserver = conf.registerPlugin('JiraStudioObserver')
+conf.registerGlobalValue(JiraStudioObserver, 'channel', registry.String('', """The channel to announce activity in."""))
 conf.registerGlobalValue(JiraStudioObserver, 'streams',StreamURLs([],"""Determines what streams should be tracked."""))
 conf.registerGlobalValue(JiraStudioObserver, 'bambooapiurl', registry.String('', """The URL of a target bamboo server."""))
 conf.registerGlobalValue(JiraStudioObserver, 'username', registry.String('', """The username to use when connecting to jira studio."""))

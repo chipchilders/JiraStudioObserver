@@ -24,12 +24,12 @@ class JiraStudioObserver(callbacks.Plugin):
     def __init__(self, irc):
         self.__parent = super(JiraStudioObserver, self)
         self.__parent.__init__(irc)
-        self.bambooChannel = '#edison'
+        self.bambooChannel = self.registryVaule('channel')
         self.bambooTime = 30
         streams = self.registryValue('streams')
         self.activityFeeds = []
         for stream in streams:
-            self.activityFeeds.append(ActivityFeed(url=stream, username=self.registryValue('username'), self.registryValue('password')))
+            self.activityFeeds.append(ActivityFeed(stream, self.registryValue('username'), self.registryValue('password')))
 
         try:
             schedule.removeEvent('myJiraStudioObserverEvent')
