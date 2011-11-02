@@ -20,13 +20,16 @@ class ActivityFeed():
         else:
             self.last_updated = last_known_update
 
-    def find_next_item(self):
+    def find_next_item(self, force_latest = False):
         i = 9
         while i > -1:
             if self.feed.entries[i]['updated_parsed'] > self.last_updated:
                 self.last_updated = self.feed.entries[i]['updated_parsed']
                 return ActivityItem(self.feed.entries[i])
             i = i - 1
+
+        if force_latest:
+            return (ActivityItem(self.feed.entries[0]))
 
         return None
 

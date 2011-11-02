@@ -24,7 +24,7 @@ class JiraStudioObserver(callbacks.Plugin):
     def __init__(self, irc):
         self.__parent = super(JiraStudioObserver, self)
         self.__parent.__init__(irc)
-        self.bambooChannel = self.registryVaule('channel')
+        self.bambooChannel = self.registryValue('channel', value=True)
         self.bambooTime = 30
         streams = self.registryValue('streams')
         self.activityFeeds = []
@@ -91,11 +91,15 @@ class JiraStudioObserver(callbacks.Plugin):
     reset = wrap(reset)
 
     def anyupdates(self, irc, msg, args):
-        if not self.getFeedUpdates(irc):
+        """takes no arguments
+
+        Checks the observed activity feeds for new updates, and reports any new items
+        back to the channel."""
+        if not self.getFeedUpdates(irc, force_latest = True):
             irc.queueMsg(ircmsgs.privmsg(self.bambooChannel, "Nothing to update you about."))
     anyupdates = wrap(anyupdates)
 
-    def getFeedUpdates(self, irc):
+    def getFeedUpdates(self, irc, force_latest=False):
         updated = False
         for feed in self.activityFeeds:
             feed.update_feed()
@@ -115,6 +119,7 @@ class JiraStudioObserver(callbacks.Plugin):
 
         Returns the next random number from the random number generator.
         """
+        #irc.reply('test' + str(self.bambooChannel))
         self.getLatest(irc, True)
     latestbuild = wrap(latestbuild)
 

@@ -29,9 +29,26 @@
 ###
 
 from supybot.test import *
+import supybot.conf as conf
 
-class JiraStudioObserverTestCase(PluginTestCase):
+class JiraStudioObserverTestCase(ChannelPluginTestCase):
     plugins = ('JiraStudioObserver',)
+    channel = 'jiratest'
 
+    def setUp(self):
+        PluginTestCase.setUp(self)
+        self.prefix = 'foo!bar@baz'
+        conf.supybot.plugins.JiraStudioObserver.channel.setValue('#jiratest')
+        conf.supybot.plugins.JiraStudioObserver.bambooapiurl.setValue('https://[yourhostname]/builds/rest/api/latest/result/[buildlabel].json?os_authType=basic&expand=results[0]')
+        conf.supybot.plugins.JiraStudioObserver.username.setValue('username')
+        conf.supybot.plugins.JiraStudioObserver.password.setValue('password')
+        conf.supybot.plugins.JiraStudioObserver.streams.setValue(['https://[yourhostname]/activity?maxResults=10&streams=key+IS+YOURPROJECTKEY&os_authType=basic',
+                                                                  'https://[yourhostname]/activity?maxResults=10&streams=key+IS+ANOTHERPROJECTKEY&os_authType=basic'])
+
+    def testLatestBuild(self):
+        self.assertNotError('latestbuild')
+
+    def testAnyupdates(self):
+        self.assertNotError('anyupdates')
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

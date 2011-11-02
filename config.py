@@ -39,13 +39,9 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     JiraStudioObserver = conf.registerPlugin('JiraStudioObserver', True)
 
-class StreamURLs(registry.SpaceSeparatedListOfStrings):
-    List = callbacks.CanonicalNameSet
-
-
 JiraStudioObserver = conf.registerPlugin('JiraStudioObserver')
 conf.registerGlobalValue(JiraStudioObserver, 'channel', registry.String('', """The channel to announce activity in."""))
-conf.registerGlobalValue(JiraStudioObserver, 'streams',StreamURLs([],"""Determines what streams should be tracked."""))
+conf.registerGlobalValue(JiraStudioObserver, 'streams', registry.SpaceSeparatedListOfStrings([],"""Determines what streams should be tracked."""))
 conf.registerGlobalValue(JiraStudioObserver, 'bambooapiurl', registry.String('', """The URL of a target bamboo server."""))
 conf.registerGlobalValue(JiraStudioObserver, 'username', registry.String('', """The username to use when connecting to jira studio."""))
 conf.registerGlobalValue(JiraStudioObserver, 'password', registry.String('', """The password to use when connecting to jira studio."""))
