@@ -113,6 +113,12 @@ class JiraStudioObserver(callbacks.Plugin):
 
         return updated
 
+    def thanks(self, irc, msg, args):
+        irc.queueMsg(
+            ircmsgs.privmsg(
+                self.bambooChannel, 
+                "You're quite welcome.  Want another pint?"))
+    thanks = wrap(thanks)
 
     def latestbuild(self, irc, msg, args):
         """takes no arguments
